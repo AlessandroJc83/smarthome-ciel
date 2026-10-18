@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: smarthome-ciel
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: DATABASE_PATH
+        value: /var/data/smarthome.db
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: NTFY_SERVER
+        value: https://ntfy.sh
+      - key: NTFY_TOPIC
+        value: smarthome-ciel-7f4c9a2e8d1b6f3a5c9e
+      - key: NTFY_TOKEN
+        sync: false
+    disk:
+      name: smarthome-data
+      mountPath: /var/data
+      sizeGB: 1

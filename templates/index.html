@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1726">
+  <title>SmartHome · Maison connectée</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">⌂</span><div><strong>SmartHome</strong><small>Centre de pilotage sécurisé</small></div></div>
+    <div class="connection"><span id="connectionDot"></span><span id="connectionText">Synchronisation…</span></div>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <div><p class="eyebrow">BAC PRO CIEL · DOMOTIQUE & CYBERSÉCURITÉ</p><h1>Votre maison, <em>intelligente</em>.</h1><p class="hero-copy">Pilotez les équipements, surveillez les incidents et recevez des alertes où que vous soyez.</p></div>
+      <button id="pushButton" class="primary-button">📱 Ouvrir ntfy</button>
+    </section>
+    <div id="toast" class="toast" role="status"></div>
+    <section class="metrics">
+      <article class="metric"><span>🌡️</span><div><small>Température moyenne</small><strong id="averageTemp">—</strong></div></article>
+      <article class="metric"><span>🛡️</span><div><small>Alarme générale</small><strong id="alarmState">—</strong></div></article>
+      <article class="metric"><span>🏠</span><div><small>Présence</small><strong id="presenceState">—</strong></div></article>
+      <article class="metric"><span>⚠️</span><div><small>Incidents actifs</small><strong id="incidentCount">—</strong></div></article>
+    </section>
+    <section class="content-grid">
+      <div class="panel plan-panel"><div class="panel-heading"><div><p class="eyebrow">VUE DU DESSUS</p><h2>Plan de la maison</h2></div><span class="mode-pill" id="modePill">Maison</span></div>
+        <div class="floor-plan" id="floorPlan">
+          <button class="room room-entree" data-room="entree"><span class="room-name">🚪 Entrée</span><span class="room-temp">—</span><span class="door"></span></button>
+          <button class="room room-salon" data-room="salon"><span class="room-name">🛋️ Salon</span><span class="room-temp">—</span><span class="sofa"></span><span class="lamp">♢</span><span class="window"></span></button>
+          <button class="room room-cuisine" data-room="cuisine"><span class="room-name">🍳 Cuisine</span><span class="room-temp">—</span><span class="counter"></span><span class="table"></span><span class="window"></span></button>
+          <button class="room room-chambre" data-room="chambre"><span class="room-name">🛏️ Chambre</span><span class="room-temp">—</span><span class="bed"></span><span class="window"></span></button>
+          <button class="room room-bath" data-room="salle_de_bain"><span class="room-name">🛁 Salle de bain</span><span class="room-temp">—</span><span class="bath"></span><span class="window"></span></button>
+          <button class="room room-garage" data-room="garage"><span class="room-name">🚗 Garage</span><span class="room-temp">—</span><span class="car"></span><span class="garage-door"></span></button>
+        </div>
+        <div class="plan-legend"><span><i class="legend-light"></i> Éclairage</span><span><i class="legend-window"></i> Fenêtre</span><span><i class="legend-alert"></i> Alerte</span></div>
+      </div>
+      <aside class="side-column">
+        <section class="panel"><div class="panel-heading"><div><p class="eyebrow">SÉCURITÉ</p><h2>Mode de surveillance</h2></div></div><div class="mode-buttons"><button data-mode="Maison">🏡 Maison</button><button data-mode="Nuit">🌙 Nuit</button><button data-mode="Absence">🧳 Absence</button></div><p class="hint">Le serveur applique les changements et synchronise tous les appareils.</p></section>
+        <section class="panel incident-panel"><div class="panel-heading"><div><p class="eyebrow">LABORATOIRE</p><h2>Simuler un incident</h2></div></div><div class="incident-buttons"><button data-incident="intrusion">🚨 Intrusion</button><button data-incident="fire">🔥 Fumée / incendie</button><button data-incident="water">💧 Fuite d’eau</button><button data-incident="low_temperature">❄️ Température basse</button></div><button id="testPush" class="secondary-button full">🔔 Tester une notification ntfy</button></section>
+      </aside>
+    </section>
+    <section class="panel equipment-panel"><div class="panel-heading"><div><p class="eyebrow">PIÈCE SÉLECTIONNÉE</p><h2 id="selectedRoom">Sélectionnez une pièce</h2></div><span id="roomStatus" class="status-badge">—</span></div><div id="equipmentControls" class="equipment-controls"><p class="empty">Cliquez sur une pièce du plan pour afficher ses équipements.</p></div></section>
+    <section class="panel alerts-panel"><div class="panel-heading"><div><p class="eyebrow">SURVEILLANCE</p><h2>Incidents en cours</h2></div></div><div id="alerts" class="alerts"><p class="empty">Aucun incident actif.</p></div></section>
+    <section class="panel history-panel"><div class="panel-heading"><div><p class="eyebrow">JOURNAL DE BORD</p><h2>Historique des événements</h2></div><button id="clearHistory" class="text-button">Effacer</button></div><div id="history" class="history"></div></section>
+  </main>
+  <footer>SmartHome · Simulation pédagogique · Les notifications dépendent du navigateur, du système et des autorisations.</footer>
+  <script>window.SMART_HOME_CONFIG = { ntfyServer: {{ ntfy_server|tojson }}, ntfyTopic: {{ ntfy_topic|tojson }} };</script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

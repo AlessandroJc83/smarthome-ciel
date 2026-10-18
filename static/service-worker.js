@@ -1,0 +1,6 @@
+const CACHE = 'smarthome-v1';
+self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(['/','/static/style.css','/static/script.js']))); self.skipWaiting(); });
+self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
+self.addEventListener('fetch', event => { if (event.request.method === 'GET') event.respondWith(fetch(event.request).catch(() => caches.match(event.request))); });
+self.addEventListener('push', event => { let data = {}; try { data = event.data ? event.data.json() : {}; } catch (_) { data = { body: event.data?.text() }; } const title = data.title || 'SmartHome'; const options = { body: data.body || 'Nouvelle alerte domotique', icon: data.icon || '/static/icon.svg', badge: '/static/icon.svg', tag: data.incident || 'smarthome', data: { url: data.url || '/' }, requireInteraction: Boolean(data.incident) }; event.waitUntil(self.registration.showNotification(title, options)); });
+self.addEventListener('notificationclick', event => { event.notification.close(); event.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => { for (const client of list) if ('focus' in client) { client.navigate(event.notification.data.url); return client.focus(); } return clients.openWindow(event.notification.data.url); })); });
